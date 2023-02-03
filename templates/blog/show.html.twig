@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ma9al{% endblock %}
+
+{% block body %}
+    <h1>ma9al page</h1>
+
+    <section class="articles">
+        <article> 
+            <h2> {{ article.title }} </h2>
+            <div class="metadata">
+               ma9al {{article.createdAt | date('d-m-Y')}} heure {{article.createdAt | date('H:i')}}
+                <p> {{ article.category.title }} </p> 
+            </div>
+            <div class="content">
+                <img src="{{ article.image }}" alt="">
+                <p>{{ article.content }}</p>
+            </div>
+        </article>
+    </section>
+    
+{% endblock %}

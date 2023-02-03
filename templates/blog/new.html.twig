@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}new Blog{% endblock %}
+
+{% block body %}
+
+<p> write a new blog </p>
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+
+<button class="btn btn-primary">Create</button>
+
+{{ form_end(form) }}
+{% endblock %}
