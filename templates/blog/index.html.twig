@@ -10,12 +10,12 @@ hello and welcome
     <article> 
         {# <h2>{{ article.title }}</h2> #}
         <div class="metadata">
-            ma9al {{article.createdAt | date('d-m-Y')}} heure {{article.createdAt | date('H:i')}}
+            {# ma9al {{article.createdAt | date('d-m-Y')}} heure {{article.createdAt | date('H:i')}} #}
             <p> {{ article.category.title }} </p>
         </div>
         <div class="content">
             <img src="{{ article.image }}" alt="">
-            <p>{{ article.content }}</p>
+            {# <p>{{ article.content }}</p> #}
             <a class="btn btn-info" href="{{ path('article_show', {'id' : article.id } ) }}">Read more</a>
         </div>
     </article>

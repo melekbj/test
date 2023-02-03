@@ -6,6 +6,7 @@ use App\Repository\ArticlesRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: ArticlesRepository::class)]
 class Articles
 {
