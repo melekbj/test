@@ -3,14 +3,15 @@
 {% block title %}ma9al{% endblock %}
 
 {% block body %}
-    <h1>ma9al page</h1>
+    <h1 class="text-center">ma9al page</h1>
 
     <section class="articles">
         <article> 
             <h2> {{ article.title }} </h2>
             <div class="metadata">
                ma9al {{article.createdAt | date('d-m-Y')}} heure {{article.createdAt | date('H:i')}}
-                <p> {{ article.category.title }} </p> 
+                <span class="text-danger"> {{ article.category.title }} </span> 
+                <span class="text-success"> {{ article.comments | length}} comments </span> 
             </div>
             <div class="content">
                 <img src="{{ article.image }}" alt="">
@@ -18,5 +19,19 @@
             </div>
         </article>
     </section>
-    
+    <a href="{{path('article_edit', {'id' : article.id} )}}" class="btn btn-success mt-2 mb-5" >Edit</a>
+
+    <section id="comments">
+        {% for comment in article.comments %}
+            <div class="comment">
+                <div class="row">
+                    <div class="md-col-3 text-danger">
+                            (<small> {{comment.createdAt | date('d-m-Y')}} heure {{comment.createdAt | date('H:i')}} </small>) {{comment.author}}
+                    </div>
+                </div>
+                <p>{{comment.content}}</p>
+            </div>
+        {% endfor %}
+    </section>
+
 {% endblock %}

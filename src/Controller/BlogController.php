@@ -49,6 +49,26 @@ class BlogController extends AbstractController
         ]);
     }
 
+    #[Route('/article/{id}/edit', name: 'article_edit')]
+    public function edit(Request $request, Articles $article, PersistenceManagerRegistry $doctrine): Response
+    {
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($article);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('article_show', [ 'id' => $article->getId() ]);
+        }
+
+
+        return $this->render('blog/edit.html.twig', [
+            'editform' =>$form->createView()
+        ]); 
+    }
+
 
 
     #[Route('/article/{id}', name: 'article_show')]
@@ -59,6 +79,8 @@ class BlogController extends AbstractController
         ]); 
     }
 
+
+ 
 
   
     
