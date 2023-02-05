@@ -22,7 +22,13 @@
             </div>
         </article>
     </section>
-    <a href="{{path('article_edit', {'id' : article.id} )}}" class="btn btn-success mt-2 mb-5" >Edit</a>
+
+    {% if app.user %}
+        {% if app.user == article.user %}
+            <a href="{{path('article_edit', {'id' : article.id} )}}" class="btn btn-success mt-2 mb-5" >Edit</a>
+        {% endif %}
+    {% endif %}
+    
 
     <section id="comments">
         {% for comment in article.comments %}
@@ -39,12 +45,19 @@
 
     <hr>
 
-    <section>  
+    <p>Comments</p>
+    {% if not app.user %}
+        <h2> you need to connect first </h2>
+        <a class="btn btn-info" href="{{path('app_login')}}">log in</a>
+    {% else %}
+     <section>  
         <h2>add new comment</h2>
         {{ form_start(commentform) }}
             {{ form_widget(commentform) }}
             <button class="btn btn-primary" formnovalidate>add comment</button>
         {{ form_end(commentform) }}
     </section>
+    {% endif %}
+    
 
 {% endblock %}

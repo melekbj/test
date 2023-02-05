@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,10 +21,13 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
+    private FlashyNotifier $flashyNotifier;
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator, FlashyNotifier $flashyNotifier)
     {
+        $this->flashyNotifier = $flashyNotifier;
     }
+    
 
     public function authenticate(Request $request): Passport
     {
@@ -46,8 +50,8 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
+        $this->flashyNotifier->success('login successfully');
+        return new RedirectResponse($this->urlGenerator->generate('app_blog'));
         throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 

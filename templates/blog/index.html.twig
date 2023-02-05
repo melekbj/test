@@ -13,6 +13,12 @@
         <div class="metadata">
             ma9al {{article.createdAt | date('d-m-Y')}} heure {{article.createdAt | date('H:i')}} 
             <p> {{ article.category.title }} </p>
+
+        {% if article.user %} 
+            <p class="text-danger"> by {{ article.user.firstName }} </p>
+        {% endif %}
+
+
         </div>
         <div class="content">
             <img src="{{ article.image }}" alt="">

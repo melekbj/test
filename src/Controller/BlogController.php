@@ -10,6 +10,7 @@ use App\Form\MyCommentType;
 use App\Repository\ArticlesRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +19,13 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 
 class BlogController extends AbstractController
-{
+{   
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
 
 
     #[Route('/', name: 'app_blog')]
@@ -44,6 +51,7 @@ class BlogController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $article->setCreatedAT(new DateTime());
             $article->setImage("https://picsum.photos/seed/picsum/200/300");
+            $article->setUser($this->security->getUser());
             $entityManager = $doctrine->getManager();
             $entityManager->persist($article);
             $entityManager->flush();
