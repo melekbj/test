@@ -21,7 +21,13 @@
         </div>
     </article>
 </section>
+
 {% endfor %}
+
+<div class="navigation">
+    {{ knp_pagination_render(articles) }}
+</div>
+
 
 
 {% endblock %}

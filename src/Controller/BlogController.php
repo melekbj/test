@@ -2,14 +2,18 @@
 
 namespace App\Controller;
 
+use DateTime;
+use App\Entity\Comment;
 use App\Entity\Articles;
 use App\Form\ArticleType;
+use App\Form\MyCommentType;
 use App\Repository\ArticlesRepository;
-use DateTime;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 
@@ -18,9 +22,12 @@ class BlogController extends AbstractController
 
 
     #[Route('/', name: 'app_blog')]
-    public function index(ArticlesRepository $articlesRepository): Response
+    public function index(ArticlesRepository $articlesRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $articles = $articlesRepository->findAll();
+        $articles = $paginator->paginate($articlesRepository->findAll(),
+        $request->query->getInt('page', 1),
+        2
+        );
 
         return $this->render('blog/index.html.twig', [
             'articles' => $articles
@@ -28,7 +35,7 @@ class BlogController extends AbstractController
     }
 
     #[Route('/article/new', name: 'article_new')]
-    public function new(Request $request, PersistenceManagerRegistry $doctrine): Response
+    public function new(Request $request, PersistenceManagerRegistry $doctrine, FlashyNotifier $flashyNotifier): Response
     {
         $article = new Articles();
         $form = $this->createForm(ArticleType::class, $article);
@@ -40,17 +47,20 @@ class BlogController extends AbstractController
             $entityManager = $doctrine->getManager();
             $entityManager->persist($article);
             $entityManager->flush();
+            $flashyNotifier->success('Article added successfully', 'http://your-awesome-link.com');
 
             return $this->redirectToRoute('article_show', [ 'id' => $article->getId() ]);
         }
-
+        
         return $this->render('blog/new.html.twig', [
             'form' =>$form->createView()
         ]);
     }
 
+    
+
     #[Route('/article/{id}/edit', name: 'article_edit')]
-    public function edit(Request $request, Articles $article, PersistenceManagerRegistry $doctrine): Response
+    public function edit(Request $request, Articles $article, PersistenceManagerRegistry $doctrine, FlashyNotifier $flashyNotifier): Response
     {
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
@@ -60,6 +70,8 @@ class BlogController extends AbstractController
             $entityManager->persist($article);
             $entityManager->flush();
 
+
+            $flashyNotifier->success('Article modified successfully', 'http://your-awesome-link.com');
             return $this->redirectToRoute('article_show', [ 'id' => $article->getId() ]);
         }
 
@@ -71,11 +83,26 @@ class BlogController extends AbstractController
 
 
 
-    #[Route('/article/{id}', name: 'article_show')]
-    public function show(Articles $articles): Response
+    #[Route('/article/{id}', name: 'article_show', methods: ["GET", "POST"] )]
+    public function show(Articles $articles, Request $request, PersistenceManagerRegistry $doctrine, FlashyNotifier $flashyNotifier): Response
     {
+        $comment = new Comment();
+        $form = $this->createForm(MyCommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setCreatedAt(new DateTime());
+            $comment->setArticle($articles);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            $flashyNotifier->success('Comment created successfully', 'http://your-awesome-link.com');
+            return $this->redirectToRoute('article_show', [ 'id' => $articles->getId() ]);
+        }
         return $this->render('blog/show.html.twig', [
-            'article' => $articles
+            'article' => $articles,
+            'commentform' => $form->createView()
+
         ]); 
     }
 

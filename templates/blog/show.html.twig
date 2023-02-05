@@ -1,4 +1,7 @@
 {% extends 'base.html.twig' %}
+{% form_theme commentform 'bootstrap_5_layout.html.twig' %}
+
+
 
 {% block title %}ma9al{% endblock %}
 
@@ -32,6 +35,16 @@
                 <p>{{comment.content}}</p>
             </div>
         {% endfor %}
+    </section>
+
+    <hr>
+
+    <section>  
+        <h2>add new comment</h2>
+        {{ form_start(commentform) }}
+            {{ form_widget(commentform) }}
+            <button class="btn btn-primary" formnovalidate>add comment</button>
+        {{ form_end(commentform) }}
     </section>
 
 {% endblock %}

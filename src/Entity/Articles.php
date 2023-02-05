@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ArticlesRepository::class)]
@@ -18,6 +19,8 @@ class Articles
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min: 10, max: 255, minMessage: "Le titre doit faire au moins {{ limit }} caractères", 
+    maxMessage: "Le titre ne peut pas faire plus de {{ limit }} caractères")]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -38,6 +41,11 @@ class Articles
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->title;
     }
 
     public function getId(): ?int
