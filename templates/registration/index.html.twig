@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% form_theme registrationForm 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Sign UP{% endblock %}
+
+{% block body %}
+{{ form_start(registrationForm) }}
+{{ form_widget(registrationForm) }}
+
+<button class="btn btn-success">Create Account</button>
+{{ form_end(registrationForm) }}
+{% endblock %}

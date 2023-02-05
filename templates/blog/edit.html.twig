@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% form_theme editform 'bootstrap_5_layout.html.twig' %}
+
+
+{% block title %}edit{% endblock %}
+
+{% block body %}
+ <p>edit page</p>
+
+{{ form_start(editform) }}
+{{ form_widget(editform) }}
+
+<button class="btn btn-success">Confirm and Save</button>
+
+{{ form_end(editform) }}
+{% endblock %}

@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'bootstrap_5_layout.html.twig' %}
 
+
 {% block title %}new Blog{% endblock %}
 
 {% block body %}
@@ -9,8 +10,8 @@
 
 {{ form_start(form) }}
 {{ form_widget(form) }}
-
-<button class="btn btn-primary">Create</button>
+{# {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }} #}
+<button class="btn btn-primary" formnovalidate>Create</button>
 
 {{ form_end(form) }}
 {% endblock %}
